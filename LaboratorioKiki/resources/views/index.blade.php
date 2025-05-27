@@ -2,111 +2,134 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Exames Genéticos</title>
+    <title>Exames Genéticos Registrados</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
+       body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f0ec;
             padding: 40px;
+            margin: 0;
         }
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .wrapper {
+            max-width: 920px;
+            margin: 0 auto;
+            background-color: #fffdfc;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
         }
 
         h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
+            color: #5b3e1d;
+            font-size: 30px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e0c3a0;
+            padding-bottom: 10px;
         }
 
-        .btn {
-            background-color: #4f46e5;
-            color: white;
-            padding: 10px 20px;
+        .btn-action {
+            background: linear-gradient(135deg, #f4a261, #e76f51);
+            color: #ffffff;
+            padding: 10px 24px;
             text-decoration: none;
             border-radius: 8px;
-            display: inline-block;
-            margin-bottom: 20px;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease-in-out;
         }
 
-        .btn:hover {
-            background-color: #3730a3;
+        .btn-action:hover {
+            background: linear-gradient(135deg, #e76f51, #f4a261);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+        }
+
+        .success-message {
+            background-color: #e3fcec;
+            border: 1px solid #95e3b4;
+            color: #276749;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .no-results {
+            background-color: #fef6e4;
+            color: #b45309;
+            border: 1px solid #fcd34d;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 20px;
+            font-weight: 500;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
+            padding: 16px;
             text-align: left;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         th {
-            background-color: #e5e7eb;
+            background-color: #fef3c7;
+            color: #78350f;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fffaf0;
         }
 
         tr:hover {
-            background-color: #f9fafb;
+            background-color: #fdf6e3;
         }
 
-        .empty-message {
-            padding: 20px;
-            background-color: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .alert-success {
-            background-color: #d1e7dd;
-            color: #0f5132;
-            border: 1px solid #badbcc;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
     </style>
 </head>
 <body>
-    @if(!empty($success))
-        <div class="alert-success">
-            {{ $success }}
-        </div>
-    @endif
-    <div class="container">
-        <h1>Exames Cadastrados</h1>
+    <div class="wrapper">
+        @if(!empty(session('success')))
+            <div class="success-message">
+               <?php echo session('success') ?> 
+            </div>
+        @endif
 
-        <a href="{{ route('exames.form') }}" class="btn">Cadastrar Novo Exame</a>
+        <h1>Exames Registrados</h1>
 
-        @if(empty($exames))
-            <div class="empty-message">
+        <a href="{{ route('exames.form') }}" class="btn-action">Cadastrar Novo Exame</a>
+
+        @if(empty($listaExames))
+            <div class="no-results">
                 Nenhum exame cadastrado até o momento.
             </div>
         @else
             <table>
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Paciente</th>
                         <th>Tipo</th>
                         <th>Data de Coleta</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($exames as $exame)
+                    @foreach($listaExames as $exame)
                         <tr>
-                            <td>{{ $exame->id }}</td>
+                            <td>{{ $exame->exame_id }}</td>
                             <td>{{ $exame->paciente }}</td>
                             <td>{{ $exame->tipo }}</td>
                             <td>{{ \Carbon\Carbon::parse($exame->data_coleta)->format('d/m/Y') }}</td>
